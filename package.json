@@ -1,0 +1,32 @@
+{
+  "name": "se2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint src",
+    "clean": "rm -rf build",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "tsc",
+    "postbuild": "echo \"Finished build with size: $(du -sh build | cut -f1)\"",
+    "prestart": "npm run build",
+    "start": "node build/index.js",
+    "dev": "ts-node-dev --respawn src/index.ts"
+  },
+  "keywords": [],
+  "author": "Ali Alzein",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "eslint": "^9.35.0",
+    "globals": "^16.3.0",
+    "jiti": "^2.5.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.42.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  }
+}
