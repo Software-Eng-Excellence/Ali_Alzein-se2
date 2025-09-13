@@ -1,5 +1,7 @@
 //SRP
 
+import logger from "./util/logger";
+
 export interface Order{
     id: number;
     price: number;
@@ -10,18 +12,29 @@ export interface Order{
 export class OrderManager{
     private Orders: Order[]=[];
     constructor(private validator: IValidator, private calculator: ICalculator){
-
+    logger.debug("OrderManager initialized with empty order list.");
     }
     getOrders(){
         return this.Orders;
     }
     addOrder(item: string, price: number){
-        const order: Order={id:this.Orders.length + 1, price,item};
-        this.validator.validate(order)
-        this.Orders.push(order);
+        try{
+            const order: Order={id:this.Orders.length + 1, price,item};
+            this.validator.validate(order)
+            this.Orders.push(order);
+        }
+        catch(error: any){
+            
+            throw new Error("[OrderManager Error]: Error Adding Order "+ error.message);
+        }
     }
     getOrder(id:number){
-        return this.getOrders().find(order=> order.id === id);
+        const order= this.Orders.find(order=> order.id === id);
+        if(!order){
+            logger.warn(`Order with ID ${id} not found.`);
+            return undefined;
+        }
+        return order;
     }
     getTotalRevenue(){
         return this.calculator.getTotalRevenue(this.Orders);
@@ -78,6 +91,7 @@ export class ItemValidator implements IValidator , IPossibleItems{
 export class PriceValidator implements IValidator{
     validate(order:Order){
       if(order.price <=0){
+            logger.error(`Price is Negative: ${order.item}.`);
             throw new Error(`Invalid price, price must be positive`);
         }  
     }
