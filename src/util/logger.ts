@@ -25,7 +25,7 @@ const logger = winston.createLogger({
     level: "info",
     transports: [
         new winston.transports.File({ filename: "error.log", level: "error", format: logFileFormat, dirname:logDir }),
-        new winston.transports.File({ filename: "all.log" , format: logFileFormat , dirname:logDir})
+        new winston.transports.File({ filename: "fafaf.log" , format: logFileFormat , dirname:logDir})
     ],
     exceptionHandlers: [
         new winston.transports.File({ filename: "exceptions.log", dirname:logDir})
