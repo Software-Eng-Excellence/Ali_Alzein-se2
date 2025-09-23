@@ -32,7 +32,7 @@ const logger = winston.createLogger({
     ]
 });
 if (isDev) {
-        logger.add(new winston.transports.Console({format: logConsoleFormat})),
+        logger.add(new winston.transports.Console({format: logConsoleFormat}));
         logger.level = "debug";
     }
     
