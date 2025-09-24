@@ -1,6 +1,6 @@
 import { Item, itemCategory } from "./Item.model";
 type type = "Birthday" | "Wedding" | "Anniversary" | "Graduation" | "Other";
-class Cake implements Item {
+export class Cake implements Item {
     getCategory(): itemCategory {
         return itemCategory.CAKE;
     }
