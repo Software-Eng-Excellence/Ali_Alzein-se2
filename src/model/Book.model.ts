@@ -1,6 +1,5 @@
 import { Item, itemCategory } from "./Item.model";
-type Genre = "Fiction" | "Non-Fiction" | "Science Fiction" | "Fantasy" | "Biography" | "History" | "Children" | "Other";
-type language = "English" | "Spanish" | "French" | "German" | "Arabic" | "Other";
+
 export class Book implements Item {
     getCategory(): itemCategory {
         return itemCategory.BOOK;
@@ -9,9 +8,9 @@ export class Book implements Item {
     private orderId: string;
     private bookTitle: string;
     private author: string;
-    private genre: Genre;
+    private genre: string;
     private format: string;
-    private language: language;
+    private language: string;
     private publisher: string;
     private specialEdition: string;
     private packaging: string;
@@ -22,9 +21,9 @@ export class Book implements Item {
         orderId: string,
         bookTitle: string,
         author: string,
-        genre: Genre,
+        genre: string,
         format: string,
-        language: language,
+        language: string,
         publisher: string,
         specialEdition: string,
         packaging: string,
@@ -56,7 +55,7 @@ export class Book implements Item {
         return this.author;
     }
 
-    getGenre(): Genre {
+    getGenre(): string {
         return this.genre;
     }
 
@@ -64,7 +63,7 @@ export class Book implements Item {
         return this.format;
     }
 
-    getLanguage(): language {
+    getLanguage(): string {
         return this.language;
     }
 

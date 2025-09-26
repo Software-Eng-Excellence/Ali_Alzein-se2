@@ -2,6 +2,11 @@ import { readXMLFile, logXmlObject } from "../src/parsers/xmlParser";
 import { readCSVFile, writeCSVFile } from "../src/parsers/parser";
 import { parseJson } from "../src/parsers/jsonParser";
 import { promises as fs } from 'fs';
+import { ToyBuilder } from "./../src/model/builders/Toy.builder";
+import { BookBuilder } from "./../src/model/builders/Book.builder";
+import { CakeBuilder } from "./../src/model/builders/Cake.builder";
+import logger from "../src/util/logger";
+
 
 describe("CSV Parser", () => {
     it("should be defined", async () => {
@@ -174,3 +179,163 @@ describe("Json Parser", () => {
   });
 
 });
+
+describe("Toy Builder", () => {
+    it("should build Toy object correctly", () => {
+        // Arrange
+        const toyBuilder = new ToyBuilder();
+        // Act
+        const toy = toyBuilder
+            .setOrderId(1001)
+            .setType("Action Figure")
+            .setAgeGroup("5-10")
+            .setBrand("Hasbro")
+            .setMaterial("Plastic")
+            .setBatteryRequired(true)
+            .setEducational(false)
+            .setPrice(19.99)
+            .setQuantity(2)
+            .build();
+        // Assert
+        expect(toy).toBeDefined();
+        expect(toy.getOrderId()).toBe(1001);
+        expect(toy.getType()).toBe("Action Figure");
+        expect(toy.getAgeGroup()).toBe("5-10");
+        expect(toy.getBrand()).toBe("Hasbro");
+        expect(toy.getMaterial()).toBe("Plastic");
+        expect(toy.isBatteryRequired()).toBe(true);
+        expect(toy.isEducational()).toBe(false);
+        expect(toy.getPrice()).toBe(19.99);
+        expect(toy.getQuantity()).toBe(2);
+    });
+    it("should throw an error and log if a required property is missing", () => {
+    // Arrange
+    const builder = new ToyBuilder();
+    builder.setOrderId(1001); // only setting orderId
+    const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+    // Act + Assert
+    expect(() => builder.build()).toThrow("Missing required property for Toy");
+    expect(spy).toHaveBeenCalledWith(
+      "Missing required property for Toy, cannot build Toy instance"
+    );
+    // Cleanup
+    spy.mockRestore();
+  });
+
+});
+
+describe("BookBuilder", () => {
+
+    it("should build Book object correctly", () => {
+        // Arrange
+        const bookBuilder = new BookBuilder();
+        // Act
+        const book = bookBuilder
+            .setOrderId("ORD12345")
+            .setBookTitle("The Great Gatsby")
+            .setAuthor("F. Scott Fitzgerald")
+            .setGenre("Fiction")
+            .setFormat("Hardcover")
+            .setLanguage("English")
+            .setPublisher("Scribner")
+            .setSpecialEdition("Anniversary Edition")
+            .setPackaging("Gift Wrap")
+            .setPrice(29.99)
+            .setQuantity(1)
+            .build();
+        // Assert
+        expect(book).toBeDefined();
+        expect(book.getOrderId()).toBe("ORD12345");
+        expect(book.getBookTitle()).toBe("The Great Gatsby");
+        expect(book.getAuthor()).toBe("F. Scott Fitzgerald");
+        expect(book.getGenre()).toBe("Fiction");
+        expect(book.getFormat()).toBe("Hardcover");
+        expect(book.getLanguage()).toBe("English");
+        expect(book.getPublisher()).toBe("Scribner");
+        expect(book.getSpecialEdition()).toBe("Anniversary Edition");
+        expect(book.getPackaging()).toBe("Gift Wrap");
+        expect(book.getPrice()).toBe(29.99);
+        expect(book.getQuantity()).toBe(1);
+    });
+    it("should throw an error and log if a required property is missing", () => {
+    // Arrange
+    const builder = new BookBuilder();
+    builder.setOrderId("ORD12345"); // only setting orderId
+
+    const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+    // Act + Assert
+    expect(() => builder.build()).toThrow("Missing required property for Book");
+    expect(spy).toHaveBeenCalledWith(
+      "Missing required property for Book, cannot build Book instance"
+    );
+
+    // Cleanup
+    spy.mockRestore();
+  });
+
+describe("CakeBuilder", () => {
+
+    it("should throw an error and log if a required property is missing", () => {
+    // Arrange
+    const builder = new CakeBuilder();
+    builder.setId(1); // only setting id
+
+    const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+    // Act + Assert
+    expect(() => builder.build()).toThrow("Missing required property for Cake");
+    expect(spy).toHaveBeenCalledWith(
+      "Missing required property for Cake, cannot build Cake instance"
+    );
+
+    // Cleanup
+    spy.mockRestore();
+  });
+
+  });
+    it("should build Cake object correctly", () => {
+        // Arrange
+        const cakeBuilder = new CakeBuilder();
+        // Act
+        const cake = cakeBuilder
+            .setId(1)
+            .setType("Birthday")
+            .setFlavor("Chocolate")
+            .setFilling("Cream")
+            .setSize(12)
+            .setLayers(2)
+            .setFrostingType("Buttercream")
+            .setFrostingFlavor("Vanilla")
+            .setDecorationType("Sprinkles")
+            .setDecorationColor("Rainbow")
+            .setCustomMessage("Happy Birthday!")
+            .setShape("Round")
+            .setAllergies("Nuts")
+            .setSpecialIngredients("Gluten-Free")
+            .setPackagingType("Box")
+            .setPrice(49.99)
+            .setQuantity(1)
+            .build();
+        // Assert
+        expect(cake).toBeDefined();
+        expect(cake.getId()).toBe(1);
+        expect(cake.getType()).toBe("Birthday");
+        expect(cake.getFlavor()).toBe("Chocolate");
+        expect(cake.getFilling()).toBe("Cream");
+        expect(cake.getSize()).toBe(12);
+        expect(cake.getLayers()).toBe(2);
+        expect(cake.getFrostingType()).toBe("Buttercream");
+        expect(cake.getFrostingFlavor()).toBe("Vanilla");
+        expect(cake.getDecorationType()).toBe("Sprinkles");
+        expect(cake.getDecorationColor()).toBe("Rainbow");
+        expect(cake.getCustomMessage()).toBe("Happy Birthday!");
+        expect(cake.getShape()).toBe("Round");
+        expect(cake.getAllergies()).toBe("Nuts");
+        expect(cake.getSpecialIngredients()).toBe("Gluten-Free");
+        expect(cake.getPackagingType()).toBe("Box");
+        expect(cake.getPrice()).toBe(49.99);
+        expect(cake.getQuantity()).toBe(1);
+    });
+  });  

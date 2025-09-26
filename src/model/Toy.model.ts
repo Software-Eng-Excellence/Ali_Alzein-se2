@@ -1,23 +1,30 @@
 import { Item, itemCategory } from "./Item.model";
 
-type materialType = "Plastic" | "Wood" | "Metal" | "Fabric" | "Other";
-type ageGroup = "0-2" | "3-5" | "6-8" | "9-12" | "13+" ;
-
 export class Toy implements Item {
     getCategory(): itemCategory {
         return itemCategory.TOY;
     }
 
+    private orderId: number;
+    private type: string;
+    private ageGroup: string;
+    private brand: string;
+    private material: string;
+    private batteryRequired: boolean;
+    private educational: boolean;
+    private price: number;
+    private quantity: number;
+
     constructor(
-        private orderId: number,
-        private type: string,
-        private ageGroup: ageGroup,
-        private brand: string,
-        private material: materialType,
-        private batteryRequired: boolean,
-        private educational: boolean,
-        private price: number,
-        private quantity: number
+         orderId: number,
+         type: string,
+         ageGroup: string,
+         brand: string,
+         material: string,
+         batteryRequired: boolean,
+         educational: boolean,
+         price: number,
+         quantity: number
     ) {
         this.orderId = orderId;
         this.type = type;
@@ -38,7 +45,7 @@ export class Toy implements Item {
         return this.type;
     }
 
-    getAgeGroup(): ageGroup {
+    getAgeGroup(): string {
         return this.ageGroup;
     }
 
@@ -46,7 +53,7 @@ export class Toy implements Item {
         return this.brand;
     }
 
-    getMaterial(): materialType {
+    getMaterial(): string {
         return this.material;
     }
 
