@@ -6,7 +6,9 @@ import { ToyBuilder } from "./../src/model/builders/Toy.builder";
 import { BookBuilder } from "./../src/model/builders/Book.builder";
 import { CakeBuilder } from "./../src/model/builders/Cake.builder";
 import logger from "../src/util/logger";
-
+import { IItem, itemCategory } from "../src/model/IItem";
+import {IMapper} from "../src/mappers/IMapper"
+import {CSVOrderMapper, JsonOrderMapper, XMLOrderMapper} from "../src/mappers/Order.mapper"
 
 describe("CSV Parser", () => {
     it("should be defined", async () => {
@@ -181,58 +183,62 @@ describe("Json Parser", () => {
 });
 
 describe("Toy Builder", () => {
-    it("should build Toy object correctly", () => {
+  it("should build Toy object correctly", () => {
         // Arrange
         const toyBuilder = new ToyBuilder();
         // Act
         const toy = toyBuilder
-            .setOrderId(1001)
             .setType("Action Figure")
             .setAgeGroup("5-10")
             .setBrand("Hasbro")
             .setMaterial("Plastic")
-            .setBatteryRequired(true)
-            .setEducational(false)
-            .setPrice(19.99)
-            .setQuantity(2)
+            .setBatteryRequired("true")
+            .setEducational("false")
             .build();
         // Assert
         expect(toy).toBeDefined();
-        expect(toy.getOrderId()).toBe(1001);
         expect(toy.getType()).toBe("Action Figure");
         expect(toy.getAgeGroup()).toBe("5-10");
         expect(toy.getBrand()).toBe("Hasbro");
         expect(toy.getMaterial()).toBe("Plastic");
-        expect(toy.isBatteryRequired()).toBe(true);
-        expect(toy.isEducational()).toBe(false);
-        expect(toy.getPrice()).toBe(19.99);
-        expect(toy.getQuantity()).toBe(2);
+        expect(toy.isBatteryRequired()).toBe("true");
+        expect(toy.isEducational()).toBe("false");
     });
     it("should throw an error and log if a required property is missing", () => {
-    // Arrange
-    const builder = new ToyBuilder();
-    builder.setOrderId(1001); // only setting orderId
-    const spy = jest.spyOn(logger, "error").mockReturnThis();
+      // Arrange
+      const builder = ToyBuilder.newBuilder()
+        .setMaterial("Plastic")
+        .setBrand("hasbro");
 
-    // Act + Assert
-    expect(() => builder.build()).toThrow("Missing required property for Toy");
-    expect(spy).toHaveBeenCalledWith(
-      "Missing required property for Toy, cannot build Toy instance"
-    );
-    // Cleanup
-    spy.mockRestore();
-  });
+      const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+      // Act + Assert
+      expect(() => builder.build()).toThrow("Missing required property for Toy");
+      expect(spy).toHaveBeenCalledWith(
+        "Missing required property for Toy, cannot build Toy instance"
+      );
+    });
+
+    it("should throw if no properties are set", () => {
+      const builder = ToyBuilder.newBuilder();
+      const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+      expect(() => builder.build()).toThrow("Missing required property for Toy");
+      expect(spy).toHaveBeenCalled();
+    });
 
 });
 
 describe("BookBuilder", () => {
+    beforeEach(() => {
+      jest.restoreAllMocks();
+    });
 
     it("should build Book object correctly", () => {
         // Arrange
         const bookBuilder = new BookBuilder();
         // Act
         const book = bookBuilder
-            .setOrderId("ORD12345")
             .setBookTitle("The Great Gatsby")
             .setAuthor("F. Scott Fitzgerald")
             .setGenre("Fiction")
@@ -241,12 +247,9 @@ describe("BookBuilder", () => {
             .setPublisher("Scribner")
             .setSpecialEdition("Anniversary Edition")
             .setPackaging("Gift Wrap")
-            .setPrice(29.99)
-            .setQuantity(1)
             .build();
         // Assert
         expect(book).toBeDefined();
-        expect(book.getOrderId()).toBe("ORD12345");
         expect(book.getBookTitle()).toBe("The Great Gatsby");
         expect(book.getAuthor()).toBe("F. Scott Fitzgerald");
         expect(book.getGenre()).toBe("Fiction");
@@ -255,13 +258,13 @@ describe("BookBuilder", () => {
         expect(book.getPublisher()).toBe("Scribner");
         expect(book.getSpecialEdition()).toBe("Anniversary Edition");
         expect(book.getPackaging()).toBe("Gift Wrap");
-        expect(book.getPrice()).toBe(29.99);
-        expect(book.getQuantity()).toBe(1);
     });
+
     it("should throw an error and log if a required property is missing", () => {
     // Arrange
-    const builder = new BookBuilder();
-    builder.setOrderId("ORD12345"); // only setting orderId
+    const builder = BookBuilder.newbuilder()
+      .setBookTitle("The Great Gatsby")
+      .setAuthor("F. Scott Fitzgerald");
 
     const spy = jest.spyOn(logger, "error").mockReturnThis();
 
@@ -270,17 +273,23 @@ describe("BookBuilder", () => {
     expect(spy).toHaveBeenCalledWith(
       "Missing required property for Book, cannot build Book instance"
     );
-
-    // Cleanup
-    spy.mockRestore();
   });
+
+    it("should throw if no properties are set", () => {
+      const builder = BookBuilder.newbuilder();
+      const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+      expect(() => builder.build()).toThrow("Missing required property for Book");
+      expect(spy).toHaveBeenCalled();
+    });
 
 describe("CakeBuilder", () => {
 
     it("should throw an error and log if a required property is missing", () => {
     // Arrange
-    const builder = new CakeBuilder();
-    builder.setId(1); // only setting id
+    const builder = CakeBuilder.newBuilder()
+      .setType("Party")
+      .setFlavor("Chocolate");
 
     const spy = jest.spyOn(logger, "error").mockReturnThis();
 
@@ -289,18 +298,22 @@ describe("CakeBuilder", () => {
     expect(spy).toHaveBeenCalledWith(
       "Missing required property for Cake, cannot build Cake instance"
     );
-
-    // Cleanup
-    spy.mockRestore();
   });
 
+    it("should throw if no properties are set", () => {
+      const builder = CakeBuilder.newBuilder();
+      const spy = jest.spyOn(logger, "error").mockReturnThis();
+
+      expect(() => builder.build()).toThrow("Missing required property for Cake");
+      expect(spy).toHaveBeenCalled();
+    });
   });
+
     it("should build Cake object correctly", () => {
         // Arrange
         const cakeBuilder = new CakeBuilder();
         // Act
         const cake = cakeBuilder
-            .setId(1)
             .setType("Birthday")
             .setFlavor("Chocolate")
             .setFilling("Cream")
@@ -315,12 +328,9 @@ describe("CakeBuilder", () => {
             .setAllergies("Nuts")
             .setSpecialIngredients("Gluten-Free")
             .setPackagingType("Box")
-            .setPrice(49.99)
-            .setQuantity(1)
             .build();
         // Assert
         expect(cake).toBeDefined();
-        expect(cake.getId()).toBe(1);
         expect(cake.getType()).toBe("Birthday");
         expect(cake.getFlavor()).toBe("Chocolate");
         expect(cake.getFilling()).toBe("Cream");
@@ -335,7 +345,112 @@ describe("CakeBuilder", () => {
         expect(cake.getAllergies()).toBe("Nuts");
         expect(cake.getSpecialIngredients()).toBe("Gluten-Free");
         expect(cake.getPackagingType()).toBe("Box");
-        expect(cake.getPrice()).toBe(49.99);
-        expect(cake.getQuantity()).toBe(1);
     });
-  });  
+  });
+
+describe("JsonOrderMapper", () => {
+  let mockItemMapper: jest.Mocked<IMapper<any, IItem>>;
+
+  beforeEach(() => {
+    mockItemMapper = {
+      map: jest.fn()
+    };
+  });
+
+  it("should map JSON data into an IOrder", () => {
+    // Arrange
+    const fakeItem: IItem = {
+      getCategory: () => itemCategory.BOOK
+    };
+    mockItemMapper.map.mockReturnValue(fakeItem);
+    const mapper = new JsonOrderMapper(mockItemMapper);
+    const jsonInput = {
+      "Order ID": "2001",
+        "Book Title": "Edge of Eternity",
+        "Author": "Dan Brown",
+        "Genre": "Science Fiction",
+        "Format": "Paperback",
+        "Language": "French",
+        "Publisher": "Oxford Press",
+        "Special Edition": "Signed Copy",
+        "Packaging": "Eco-Friendly Packaging",
+        "Price": "12",
+        "Quantity": "5"
+    };
+    // Act
+    const result = mapper.map(jsonInput);
+    // Assert
+    expect(mockItemMapper.map).toHaveBeenCalledWith(jsonInput);
+    expect(result.getId()).toBe("2001");
+    expect(result.getQuantity()).toBe(5);
+    expect(result.getPrice()).toBe(12);
+    expect(result.getItem()).toBe(fakeItem);
+  });
+});
+
+describe("CSVOrderMapper", () => {
+    let mockItemMapper: jest.Mocked<IMapper<any, IItem>>;
+
+  beforeEach(() => {
+    mockItemMapper = {
+      map: jest.fn()
+    };
+  });
+
+  it("should map CSV data into IOrder", () =>{
+    // Arrange
+    const fakeItem: IItem = {
+      getCategory: () => itemCategory.CAKE
+    };
+    mockItemMapper.map.mockReturnValue(fakeItem);
+    const mapper = new CSVOrderMapper(mockItemMapper);
+    const csvInput: string[] = ["0","Sponge","Vanilla","Cream","20","2","Buttercream","Vanilla","Sprinkles","Multi-color","Happy Birthday","Round","Nut-Free","Organic Ingredients","Standard Box","50","1"]; 
+    // Act
+    const result = mapper.map(csvInput);
+    // Assert
+    expect(mockItemMapper.map).toHaveBeenCalledWith(csvInput);
+    expect(result.getId()).toBe("0");
+    expect(result.getQuantity()).toBe(1);
+    expect(result.getPrice()).toBe(50);
+    expect(result.getItem()).toBe(fakeItem);
+  });
+});
+
+describe("XMLOrderMapper", () => {
+    let mockItemMapper: jest.Mocked<IMapper<any, IItem>>;
+
+  beforeEach(() => {
+    mockItemMapper = {
+      map: jest.fn()
+    };
+  });
+
+  it("should map XML data into IOrder", () =>{
+    // Arrange
+    const fakeItem: IItem = {
+      getCategory: () => itemCategory.TOY
+    };
+    mockItemMapper.map.mockReturnValue(fakeItem);
+    const mapper = new XMLOrderMapper(mockItemMapper);
+    const xmlInput = {
+      OrderID: "5001",
+      Type: "Plush Toy",
+      AgeGroup: "13+",
+      Brand: "FunTime",
+      Material: "Fabric",
+      BatteryRequired: "Yes",
+      Educational: "Yes",
+      Price: "247",
+      Quantity: "7"
+    };
+    // Act
+    const result = mapper.map(xmlInput);
+    // Assert
+    expect(mockItemMapper.map).toHaveBeenCalledWith(xmlInput);
+    expect(result.getId()).toBe("5001");
+    expect(result.getQuantity()).toBe(7);
+    expect(result.getPrice()).toBe(247);
+    expect(result.getItem()).toBe(fakeItem);
+  });
+
+});

@@ -1,44 +1,31 @@
-import { Item, itemCategory } from "./Item.model";
+import { IItem, itemCategory } from "./IItem";
 
-export class Toy implements Item {
+export class Toy implements IItem {
     getCategory(): itemCategory {
         return itemCategory.TOY;
     }
 
-    private orderId: number;
     private type: string;
     private ageGroup: string;
     private brand: string;
     private material: string;
-    private batteryRequired: boolean;
-    private educational: boolean;
-    private price: number;
-    private quantity: number;
+    private batteryRequired: string;
+    private educational: string;
 
     constructor(
-         orderId: number,
          type: string,
          ageGroup: string,
          brand: string,
          material: string,
-         batteryRequired: boolean,
-         educational: boolean,
-         price: number,
-         quantity: number
+         batteryRequired:  string,
+         educational: string
     ) {
-        this.orderId = orderId;
         this.type = type;
         this.ageGroup = ageGroup;
         this.brand = brand;
         this.material = material;
         this.batteryRequired = batteryRequired;
         this.educational = educational;
-        this.price = price;
-        this.quantity = quantity;
-    }
-
-    getOrderId(): number {
-        return this.orderId;
     }
 
     getType(): string {
@@ -57,19 +44,12 @@ export class Toy implements Item {
         return this.material;
     }
 
-    isBatteryRequired(): boolean {
+    isBatteryRequired(): string {
         return this.batteryRequired;
     }
 
-    isEducational(): boolean {
+    isEducational(): string {
         return this.educational;
     }
 
-    getPrice(): number {
-        return this.price;
-    }
-
-    getQuantity(): number {
-        return this.quantity;
-    }
 }

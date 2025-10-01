@@ -8,10 +8,10 @@ import {promises as fs} from "fs";
  * @param filePath Path to the Xml file.
  */
 
-export async function readXMLFile(filePath: string): Promise<string[][]> {
+export async function readXMLFile(filePath: string): Promise<any> {
     try{
         const fileContent= await fs.readFile(filePath, 'utf8');
-        const result = await parseStringPromise(fileContent, {trim: true});
+        const result = await parseStringPromise(fileContent, {trim: true, explicitArray: false,});
         return result;
     }
     catch(error){

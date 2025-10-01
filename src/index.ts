@@ -1,59 +1,33 @@
-import { ToyBuilder } from "./model/builders/Toy.builder";
-import { BookBuilder } from "./model/builders/Book.builder";
-import { CakeBuilder } from "./model/builders/Cake.builder";
+import logger from "./util/logger";
+import { readXMLFile } from "./parsers/xmlParser";
+import { readCSVFile } from "./parsers/parser";
+import { parseJson } from "./parsers/jsonParser";
+import { CSVCakeMapper } from "./mappers/Cake.mapper";
+import { XMLToyMapper } from "./mappers/Toy.mapper";
+import { JsonBookMapper } from "./mappers/book.mapper";
+import { CSVOrderMapper, JsonOrderMapper, XMLOrderMapper } from "./mappers/Order.mapper";
 
 async function main() {
-  const cakeBuilder= new CakeBuilder();
-  const cake =cakeBuilder
-    .setId(1)
-    .setType("Birthday")
-    .setFlavor("Chocolate")
-    .setFilling("Cream")
-    .setSize(12)
-    .setLayers(2)
-    .setFrostingType("Buttercream")
-    .setFrostingFlavor("Vanilla")
-    .setDecorationType("Sprinkles")
-    .setDecorationColor("Rainbow")
-    .setCustomMessage("Happy Birthday!")
-    .setShape("Round")
-    .setAllergies("Nuts")
-    .setSpecialIngredients("Gluten-Free")
-    .setPackagingType("Box")
-    .setPrice(49.99)
-    .setQuantity(1)
-    .build();
-  console.log(cake);
 
-  const bookBuilder= new BookBuilder();
-  const book = bookBuilder
-    .setOrderId("ORD12345")
-    .setBookTitle("The Great Gatsby")
-    .setAuthor("F. Scott Fitzgerald")
-    .setGenre("Fiction")
-    .setFormat("Hardcover")
-    .setLanguage("English")
-    .setPublisher("Scribner")
-    .setSpecialEdition("Anniversary Edition")
-    .setPackaging("Gift Wrap")
-    .setPrice(29.99)
-    .setQuantity(1)
-    .build();
-  console.log(book);
+  const data = await readCSVFile("src/data/cake orders.csv");
+  const cakeMapper = new CSVCakeMapper();
+  const orderMapper = new CSVOrderMapper(cakeMapper);
+  const orders = data.map(orderMapper.map.bind(orderMapper));
+  logger.info("Cakes from CSV: \n, %o", orders);
 
-  const toyBuilder= new ToyBuilder();
-  const toy = toyBuilder
-    .setOrderId(1001)
-    .setType("Action Figure")
-    .setAgeGroup("5-10")
-    .setBrand("Hasbro")
-    .setMaterial("Plastic")
-    .setBatteryRequired(true)
-    .setEducational(false)
-    .setPrice(19.99)
-    .setQuantity(2)
-    .build();
-  console.log(toy);  
+  const jsonData = await parseJson("src/data/book orders.json");
+  const bookMapper = new JsonBookMapper();
+  const orderMapper3 = new JsonOrderMapper(bookMapper);
+  const orders3 = jsonData.map(orderMapper3.map.bind(orderMapper3));
+  logger.info("Books from JSON: \n, %o", orders3);
+
+  const xmldata = await readXMLFile("src/data/toy orders.xml");
+  console.log("xmlData:", xmldata);
+  const toyMapper = new XMLToyMapper();
+  const orderMapper2 = new XMLOrderMapper(toyMapper);
+  const rows = xmldata.data.row; 
+  const orders2 = rows.map((row: any) => orderMapper2.map(row));
+  logger.info("Toys from XML: \n %o", orders2);
 }
 
 main();

@@ -2,7 +2,6 @@ import logger from "../../util/logger";
 import { Cake } from "../Cake.model";
 
 export class CakeBuilder {
-    private id!: number;
     private type!: string;
     private flavor!: string;
     private filling!: string;
@@ -17,13 +16,9 @@ export class CakeBuilder {
     private allergies!: string;
     private specialIngredients!: string;
     private packagingType!: string;
-    private price!: number;
-    private quantity!: number;
 
-
-    setId(id: number): CakeBuilder {
-        this.id = id;
-        return this;
+    public static newBuilder(): CakeBuilder {
+        return new CakeBuilder();
     }
 
     setType(type: string): CakeBuilder {
@@ -96,19 +91,8 @@ export class CakeBuilder {
         return this;
     }
 
-    setPrice(price: number): CakeBuilder {
-        this.price = price;
-        return this;
-    }
-
-    setQuantity(quantity: number): CakeBuilder {
-        this.quantity = quantity;
-        return this;
-    }
-
     build(): Cake {
         const requiredProperties = [
-            this.id,
             this.type,
             this.flavor,
             this.size,
@@ -119,8 +103,6 @@ export class CakeBuilder {
             this.decorationColor,
             this.shape,
             this.packagingType,
-            this.price,
-            this.quantity
         ];
         for (const prop of requiredProperties) {
             if (!prop) {
@@ -129,7 +111,6 @@ export class CakeBuilder {
             }        
         }
         return new Cake(
-            this.id,
             this.type,
             this.flavor,
             this.filling,
@@ -144,8 +125,6 @@ export class CakeBuilder {
             this.allergies,
             this.specialIngredients,
             this.packagingType,
-            this.price,
-            this.quantity
         );
     }
 }

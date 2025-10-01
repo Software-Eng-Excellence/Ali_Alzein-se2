@@ -2,7 +2,6 @@ import { Book } from "../Book.model";
 import logger from "../../util/logger";
 
 export class BookBuilder {
-    private orderId!: string;
     private bookTitle!: string;
     private author!: string;
     private genre!: string;
@@ -11,12 +10,9 @@ export class BookBuilder {
     private publisher!: string;
     private specialEdition!: string;
     private packaging!: string;
-    private price!: number;
-    private quantity!: number;
 
-    public setOrderId(orderId: string): BookBuilder {
-        this.orderId = orderId;
-        return this;
+    public static newbuilder(): BookBuilder{
+        return new BookBuilder();
     }
 
     public setBookTitle(bookTitle: string): BookBuilder {
@@ -59,18 +55,8 @@ export class BookBuilder {
         return this;
     }
 
-    public setPrice(price: number): BookBuilder {
-        this.price = price;
-        return this;
-    }
-
-    public setQuantity(quantity: number): BookBuilder {
-        this.quantity = quantity;
-        return this;
-    }
     build(): Book {
         const requiredProperties= [
-            this.orderId,
             this.bookTitle,
             this.author,
             this.genre,
@@ -78,9 +64,7 @@ export class BookBuilder {
             this.language,
             this.publisher,
             this.specialEdition,
-            this.packaging,
-            this.price,
-            this.quantity
+            this.packaging
         ]
         for (const prop of requiredProperties) {
             if (!prop) {
@@ -89,7 +73,6 @@ export class BookBuilder {
             }        
         }
         return new Book(
-            this.orderId,
             this.bookTitle,
             this.author,
             this.genre,
@@ -97,10 +80,7 @@ export class BookBuilder {
             this.language,
             this.publisher,
             this.specialEdition,
-            this.packaging,
-            this.price,
-            this.quantity
+            this.packaging
         );
     }
-
 }
