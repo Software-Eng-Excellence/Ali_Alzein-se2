@@ -3,6 +3,9 @@ import { Toy } from "../model/Toy.model";
 import { IMapper } from "./IMapper";
 
 export class XMLToyMapper implements IMapper<any, Toy> {
+        reverseMap(data: Toy) {
+            throw new Error("Method not implemented.");
+        }
         map(data: any): Toy {
         return ToyBuilder.newBuilder()
             .setType(data.Type)

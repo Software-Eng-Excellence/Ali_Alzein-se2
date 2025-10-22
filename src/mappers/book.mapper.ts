@@ -2,7 +2,10 @@ import { IMapper } from "./IMapper";
 import { Book } from "../model/Book.model";
 import { BookBuilder } from "../model/builders/Book.builder";
 
-export class JsonBookMapper implements IMapper<any, Book>{ 
+export class JsonBookMapper implements IMapper<any, Book>{
+    reverseMap(data: Book) {
+        throw new Error("Method not implemented.");
+    } 
     map(data: any): Book {
         console.log("Mapping book data:", data);
         return BookBuilder.newbuilder()
