@@ -1,7 +1,7 @@
 import config from "../../config";
 import { Database, Statement } from "sqlite3";
 import { open, Database as SqliteDatabase } from "sqlite";
-import { DatabaseConnectionException } from "../../util/exceptions/repositoryExceptions";
+import { DatabaseConnectionException } from "../../util/exceptions/DatabaseConnectionException";
 import logger from "../../util/logger";
 
 export class ConnectionManager{
