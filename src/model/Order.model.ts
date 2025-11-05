@@ -40,7 +40,6 @@ export class IdentifiableOrderItem implements IIdentifiableOrderItem {
     getId(): id {
         return this.id;
     }
-
     getItem(): IIdentifiableItem {
         return this.identifiableItem;
     }

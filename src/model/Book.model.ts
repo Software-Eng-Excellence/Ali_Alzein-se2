@@ -1,4 +1,5 @@
-import { IItem, itemCategory } from "./IItem";
+import { id } from "repository/IRepository";
+import { IIdentifiableItem, IItem, itemCategory } from "./IItem";
 
 export class Book implements IItem {
     getCategory(): itemCategory {
@@ -66,4 +67,33 @@ export class Book implements IItem {
         return this.packaging;
     }
 
+}
+
+export class IdentifiableBook extends Book implements IIdentifiableItem{
+    constructor(private id:id,
+        bookTitle: string,
+        author: string,
+        genre: string,
+        format: string,
+        language: string,
+        publisher: string,
+        specialEdition: string,
+        packaging: string)
+        
+        {
+            super(
+                bookTitle,
+                author,
+                genre,
+                format,
+                language,
+                publisher,
+                specialEdition,
+                packaging
+            )
+        }
+    getId(): id {
+        return this.id;
+    }
+    
 }

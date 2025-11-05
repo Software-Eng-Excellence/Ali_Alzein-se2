@@ -140,5 +140,4 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
             throw new DbException("Failed to delete order", error as Error);
         }
     }
-
 }

@@ -2,13 +2,18 @@ import { readXMLFile, logXmlObject } from "../src/parsers/xmlParser";
 import { readCSVFile, writeCSVFile } from "../src/parsers/parser";
 import { parseJson } from "../src/parsers/jsonParser";
 import { promises as fs } from 'fs';
-import { ToyBuilder } from "./../src/model/builders/Toy.builder";
-import { BookBuilder } from "./../src/model/builders/Book.builder";
-import { CakeBuilder } from "./../src/model/builders/Cake.builder";
+import { IdentifiableToyBuilder, ToyBuilder } from "./../src/model/builders/Toy.builder";
+import { BookBuilder, IdentifiableBookBuilder } from "./../src/model/builders/Book.builder";
+import { CakeBuilder, IdentifiableCakeBuilder } from "./../src/model/builders/Cake.builder";
 import logger from "../src/util/logger";
 import { IItem, itemCategory } from "../src/model/IItem";
 import {IMapper} from "../src/mappers/IMapper"
 import {CSVOrderMapper, JsonOrderMapper, XMLOrderMapper} from "../src/mappers/Order.mapper"
+import { IdentifiableBook } from "../src/model/Book.model";
+import { IdentifiableOrderItemBuilder } from "../src/model/builders/Order.builder";
+import { IdentifiableCake } from "../src/model/Cake.model";
+import { IdentifiableOrderItem } from "../src/model/Order.model";
+import { IdentifiableToy } from "../src/model/Toy.model";
 
 describe("CSV Parser", () => {
     it("should be defined", async () => {
@@ -282,7 +287,8 @@ describe("BookBuilder", () => {
       expect(() => builder.build()).toThrow("Missing required property for Book");
       expect(spy).toHaveBeenCalled();
     });
-
+  });
+  
 describe("CakeBuilder", () => {
 
     it("should throw an error and log if a required property is missing", () => {
@@ -307,7 +313,6 @@ describe("CakeBuilder", () => {
       expect(() => builder.build()).toThrow("Missing required property for Cake");
       expect(spy).toHaveBeenCalled();
     });
-  });
 
     it("should build Cake object correctly", () => {
         // Arrange
@@ -353,7 +358,8 @@ describe("JsonOrderMapper", () => {
 
   beforeEach(() => {
     mockItemMapper = {
-      map: jest.fn()
+      map: jest.fn(),
+      reverseMap: jest.fn()
     };
   });
 
@@ -393,7 +399,8 @@ describe("CSVOrderMapper", () => {
 
   beforeEach(() => {
     mockItemMapper = {
-      map: jest.fn()
+      map: jest.fn(),
+      reverseMap: jest.fn()
     };
   });
 
@@ -421,7 +428,8 @@ describe("XMLOrderMapper", () => {
 
   beforeEach(() => {
     mockItemMapper = {
-      map: jest.fn()
+      map: jest.fn(),
+      reverseMap: jest.fn()
     };
   });
 
@@ -453,4 +461,131 @@ describe("XMLOrderMapper", () => {
     expect(result.getItem()).toBe(fakeItem);
   });
 
+});
+
+class MockOrder {
+  constructor(private id: string, private qty: number, private price: number) {}
+  getId = () => this.id;
+  getQuantity = () => this.qty;
+  getPrice = () => this.price;
+}
+
+class MockItem {
+  getCategory = jest.fn();
+}
+
+class MockCake {
+  getType = jest.fn(() => "Sponge");
+  getFlavor = jest.fn(() => "Vanilla");
+  getFilling = jest.fn(() => "Cream");
+  getSize = jest.fn(() => "Medium");
+  getLayers = jest.fn(() => 2);
+  getFrostingType = jest.fn(() => "Buttercream");
+  getFrostingFlavor = jest.fn(() => "Chocolate");
+  getDecorationType = jest.fn(() => "Sprinkles");
+  getDecorationColor = jest.fn(() => "Multi");
+  getCustomMessage = jest.fn(() => "Happy Birthday");
+  getShape = jest.fn(() => "Round");
+  getAllergies = jest.fn(() => "Nut-Free");
+  getSpecialIngredients = jest.fn(() => "Organic");
+  getPackagingType = jest.fn(() => "Box");
+}
+
+class MockBook {
+  getBookTitle = jest.fn(() => "Inferno");
+  getAuthor = jest.fn(() => "Dan Brown");
+  getGenre = jest.fn(() => "Thriller");
+  getFormat = jest.fn(() => "Hardcover");
+  getLanguage = jest.fn(() => "English");
+  getPublisher = jest.fn(() => "Penguin");
+  getSpecialEdition = jest.fn(() => "Collector");
+  getPackaging = jest.fn(() => "Plastic Wrap");
+}
+
+class MockToy {
+  getType = jest.fn(() => "Plush");
+  getAgeGroup = jest.fn(() => "12+");
+  getBrand = jest.fn(() => "ToyCo");
+  getMaterial = jest.fn(() => "Fabric");
+  isBatteryRequired = jest.fn(() => true);
+  isEducational = jest.fn(() => false);
+}
+
+describe("IdentifiableOrderItemBuilder", () => {
+  it("builds an IdentifiableOrderItem correctly", () => {
+    const item = new MockItem();
+    const order = new MockOrder("1", 3, 100);
+    const result = IdentifiableOrderItemBuilder.newBuilder()
+      .setItem(item as any)
+      .setOrder(order as any)
+      .build();
+
+    expect(result).toBeInstanceOf(IdentifiableOrderItem);
+    expect(result.getId()).toBe("1");
+    expect(result.getQuantity()).toBe(3);
+    expect(result.getPrice()).toBe(100);
+    expect(result.getItem()).toBe(item);
+  });
+
+  it("throws an error if missing properties", () => {
+    const builder = IdentifiableOrderItemBuilder.newBuilder();
+    expect(() => builder.build()).toThrow("Missing required properties");
+  });
+});
+
+describe("IdentifiableCakeBuilder", () => {
+  it("builds an IdentifiableCake correctly", () => {
+    const cake = new MockCake();
+    const result = IdentifiableCakeBuilder.newBuilder()
+      .setId("cake1")
+      .setCake(cake as any)
+      .build();
+
+    expect(result).toBeInstanceOf(IdentifiableCake);
+    expect(result.getId()).toBe("cake1");
+    expect(result.getFlavor()).toBe("Vanilla");
+  });
+
+  it("throws an error when required properties missing", () => {
+    const builder = IdentifiableCakeBuilder.newBuilder();
+    expect(() => builder.build()).toThrow("Missing required property");
+  });
+});
+
+describe("IdentifiableBookBuilder", () => {
+  it("builds an IdentifiableBook correctly", () => {
+    const book = new MockBook();
+    const result = IdentifiableBookBuilder.newBuilder()
+      .setId("b1")
+      .setBook(book as any)
+      .build();
+
+    expect(result).toBeInstanceOf(IdentifiableBook);
+    expect(result.getId()).toBe("b1");
+    expect(result.getBookTitle()).toBe("Inferno");
+  });
+
+  it("throws error when id or book missing", () => {
+    const builder = IdentifiableBookBuilder.newBuilder();
+    expect(() => builder.build()).toThrow("Missing required property");
+  });
+});
+
+describe("IdentifiableToyBuilder", () => {
+  it("builds an IdentifiableToy correctly", () => {
+    const toy = new MockToy();
+    const result = IdentifiableToyBuilder.newBuilder()
+      .setId("toy1")
+      .setToy(toy as any)
+      .build();
+
+    expect(result).toBeInstanceOf(IdentifiableToy);
+    expect(result.getId()).toBe("toy1");
+    expect(result.getType()).toBe("Plush");
+  });
+
+  it("throws an error if required fields missing", () => {
+    const builder = IdentifiableToyBuilder.newBuilder();
+    expect(() => builder.build()).toThrow("Missing required property");
+  });
 });

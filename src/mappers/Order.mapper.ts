@@ -52,17 +52,17 @@ export class SQLiteOrderMapper implements IMapper<{data: SQLiteOrder, item:IIden
         );
     }
 
-    reverseMap(data: IdentifiableOrderItem):{ data: SQLiteOrder, item:IIdentifiableItem} {
-        return {
-            data: {
-                id: data.getId(),
-                quantity: data.getQuantity(),
-                price: data.getPrice(),
-                item_category: data.getItem().getCategory(),
-                item_id: data.getItem().getId()
-            },
-            item: data.getItem()
-        };
+    reverseMap(data: IIdentifiableOrderItem): { data: SQLiteOrder, item: IIdentifiableItem } {
+    return {
+        data: {
+        id: data.getId(),
+        quantity: data.getQuantity(),
+        price: data.getPrice(),
+        item_category: data.getItem().getCategory(),
+        item_id: data.getItem().getId()
+        },
+        item: data.getItem()
+    };
     }
 
 }
