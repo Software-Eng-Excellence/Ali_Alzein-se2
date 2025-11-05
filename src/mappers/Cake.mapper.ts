@@ -66,7 +66,7 @@ export class SQLiteCakeMapper implements IMapper<SQLiteCake, IdentifiableCake> {
                 .setFilling(data.filling)
                 .setSize(data.size)
                 .setLayers(data.layers)
-                .setFrostingType(data.frosting_type)     // ✅ safe
+                .setFrostingType(data.frosting_type)
                 .setFrostingFlavor(data.frosting_flavor)
                 .setDecorationType(data.decoration_type)
                 .setDecorationColor(data.decoration_color)
@@ -88,7 +88,7 @@ export class SQLiteCakeMapper implements IMapper<SQLiteCake, IdentifiableCake> {
             filling: data.getFilling(),
             size: data.getSize(),
             layers: data.getLayers(),
-            frosting_type: data.getFrostingType(),      // ✅ match DB
+            frosting_type: data.getFrostingType(),
             frosting_flavor: data.getFrostingFlavor(),
             decoration_type: data.getDecorationType(),
             decoration_color: data.getDecorationColor(),

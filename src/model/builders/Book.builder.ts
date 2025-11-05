@@ -1,4 +1,4 @@
-import { Book } from "../Book.model";
+import { Book, IdentifiableBook } from "../Book.model";
 import logger from "../../util/logger";
 
 export class BookBuilder {
@@ -81,6 +81,41 @@ export class BookBuilder {
             this.publisher,
             this.specialEdition,
             this.packaging
+        );
+    }
+}
+export class IdentifiableBookBuilder{
+    private id!: string;
+    private book!:Book;
+
+    static newBuilder(): IdentifiableBookBuilder{
+        return new IdentifiableBookBuilder();
+    }
+
+    setId(id:string): IdentifiableBookBuilder{
+        this.id=id;
+        return this;
+    }
+    setBook(book:Book):IdentifiableBookBuilder{
+        this.book=book;
+        return this;
+    }
+    build(): IdentifiableBook{
+        if (!this.id || !this.book) {
+            logger.error("Missing required property for IdentifiableBook, cannot build IdentifiableBook instance");
+            throw new Error("Missing required property for IdentifiableBook");
+        }
+
+        return new IdentifiableBook(
+            this.id,
+            this.book.getBookTitle(),
+            this.book.getAuthor(),
+            this.book.getGenre(),
+            this.book.getFormat(),
+            this.book.getLanguage(),
+            this.book.getPublisher(),
+            this.book.getSpecialEdition(),
+            this.book.getPackaging()
         );
     }
 }
