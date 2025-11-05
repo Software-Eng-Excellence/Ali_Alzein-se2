@@ -1,29 +1,14 @@
 import logger from "./util/logger";
-import { CakeOrderRepository } from "./repository/file/Cake.order.repository";
-import config from "./config";
-import { OrderRepository } from "./repository/PostgreSQL/Order.repository";
-import { CakeRepository } from "./repository/PostgreSQL/Cake.order.repository";
 import { CakeBuilder, IdentifiableCakeBuilder } from "./model/builders/Cake.builder";
 import { IdentifiableOrderItemBuilder, OrderBuilder } from "./model/builders/Order.builder";
 import { BookBuilder, IdentifiableBookBuilder } from "./model/builders/Book.builder";
-import { BookRepository } from "./repository/PostgreSQL/Book.order.repository";
-import { ToyRepository } from "./repository/PostgreSQL/Toy.order.repository";
 import { IdentifiableToyBuilder, ToyBuilder } from "./model/builders/Toy.builder";
+import { DBMode, RepositoryFactory } from "./repository/Repository.factory";
+import { itemCategory } from "./model/IItem";
 
-async function main() {
-
-  const path =config.storagePath.csv.cake;
-  const repository = new CakeOrderRepository(path);
-  const data = await repository.get("1");
-  logger.info("Cakes from CSV: \n, %o", data);
-
-
-
-}
 
   async function DBSandBox(){
-    const dbOrder = new OrderRepository( new CakeRepository());
-    await dbOrder.init();
+    const dbOrder = await RepositoryFactory.create(DBMode.POSTGRESQL ,itemCategory.CAKE);
     //Create identifiable cake
     const cake = CakeBuilder.newBuilder()
     .setType("Birthday")
@@ -62,8 +47,7 @@ async function main() {
     await dbOrder.update(idOrder);
     console.log((await dbOrder.getAll()).length);
 
-    const dbOrder2 = new OrderRepository( new BookRepository());
-    await dbOrder2.init();
+    const dbOrder2 = await RepositoryFactory.create(DBMode.POSTGRESQL ,itemCategory.BOOK);
     const book = BookBuilder.newbuilder()
       .setBookTitle("Tinky Winky")
       .setAuthor("Ali Alzein")
@@ -94,8 +78,7 @@ async function main() {
     await dbOrder2.update(idOrder2);
     console.log((await dbOrder2.getAll()).length);   
     
-    const dbOrder3 = new OrderRepository( new ToyRepository());
-    await dbOrder3.init();
+    const dbOrder3 = await RepositoryFactory.create(DBMode.POSTGRESQL ,itemCategory.TOY);
     const toy = ToyBuilder.newBuilder()
       .setType("puzzle")
       .setAgeGroup("5-10")
@@ -120,11 +103,10 @@ async function main() {
     const idOrder3 = IdentifiableOrderItemBuilder.newBuilder().setItem(idToy).setOrder(order3).build();
     await dbOrder3.create(idOrder3);
     console.log(idOrder3.getId());
-    //await dbOrder3.delete(idOrder3.getId());
+    await dbOrder3.delete(idOrder3.getId());
     await dbOrder3.update(idOrder3);
     console.log((await dbOrder3.getAll()).length);
 
 
   }
-//main();
 DBSandBox().catch((error) => logger.error("Error in DBSandBox: %o", error));
