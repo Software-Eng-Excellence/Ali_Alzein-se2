@@ -1,6 +1,6 @@
 import { itemCategory } from "../model/IItem";
 import { Initializable, IRepository } from "./IRepository";
-import { IOrder } from "../model/IOrder";
+import { IIdentifiableOrderItem, IOrder } from "../model/IOrder";
 import { OrderRepository } from "./sqlite/Order.repository";
 import { OrderRepository as POrderRepository} from "./PostgreSQL/Order.repository";
 import { CakeRepository as PCakeRepository} from "./PostgreSQL/Cake.order.repository";
@@ -17,10 +17,10 @@ export enum DBMode {
 }
 
 export class RepositoryFactory {
-    public static async create (mode: DBMode, category:itemCategory): Promise<IRepository<IOrder>>{
+    public static async create (mode: DBMode, category:itemCategory): Promise<IRepository<IIdentifiableOrderItem>>{
         switch(mode){
             case DBMode.SQLITE:
-                let repository: IRepository<IOrder> & Initializable;
+                let repository: IRepository<IIdentifiableOrderItem> & Initializable;
                 switch (category) {
                     case itemCategory.CAKE:
                         repository = new OrderRepository(new CakeRepository());
@@ -30,15 +30,11 @@ export class RepositoryFactory {
                 }
                 await repository.init();
                 return repository;
+
             case DBMode.FILE:
-                switch (category){
-                    case itemCategory.CAKE:
-                        return new CakeOrderRepository(config.storagePath.csv.cake);
-                    default:
-                        throw new Error("Unsupported Category");
-                }
+                throw new Error("File DB Mode not supported yet");
             case DBMode.POSTGRESQL:
-                let prepository: IRepository<IOrder> & Initializable;
+                let prepository: IRepository<IIdentifiableOrderItem> & Initializable;
                 switch (category){
                     case itemCategory.CAKE:
                         prepository = new POrderRepository( new PCakeRepository());
