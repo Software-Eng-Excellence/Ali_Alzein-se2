@@ -1,6 +1,6 @@
-import { AnalyticsService } from "../src/services/analytics.service";
-import { OrderManagementService } from "../src/services/orderManagement.service";
-import { itemCategory } from "../src/model/IItem";
+import { AnalyticsService } from "../../src/services/analytics.service";
+import { OrderManagementService } from "../../src/services/orderManagement.service";
+import { itemCategory } from "../../src/model/IItem";
 
 describe("AnalyticsService", () => {
   let analyticsService: AnalyticsService;

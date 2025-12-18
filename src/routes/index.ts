@@ -1,5 +1,7 @@
 import { Router } from "express";
 import OrderRoutes from "./order.route"
+import AnalyticsRoutes from "./analytics.route"
+
 const routes = Router();
 
 routes.get('/', (req, res) => {
@@ -7,5 +9,7 @@ routes.get('/', (req, res) => {
 });
 
 routes.use('/orders', OrderRoutes);
+
+routes.use('/analytics', AnalyticsRoutes);
 
 export default routes;
