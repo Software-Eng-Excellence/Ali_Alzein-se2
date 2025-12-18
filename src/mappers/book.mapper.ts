@@ -64,3 +64,44 @@ export class SQLiteBookMapper implements IMapper<SQLiteBook, IdentifiableBook> {
         };
     }
 }
+export interface JsonBookRequest {
+    id: string;
+    book: any;
+}
+
+export class JsonBookRequestMapper implements IMapper<any, IdentifiableBook> {
+
+    map(data: any): IdentifiableBook {
+        const book = BookBuilder.newbuilder()
+            .setBookTitle(data['Book Title'])
+            .setAuthor(data['Author'])
+            .setGenre(data['Genre'])
+            .setFormat(data['Format'])
+            .setLanguage(data['Language'])
+            .setPublisher(data['Publisher'])
+            .setSpecialEdition(data['Special Edition'])
+            .setPackaging(data['Packaging'])
+            .build();
+
+        return IdentifiableBookBuilder.newBuilder()
+            .setBook(book)
+            .setId(data.id)
+            .build();
+    }
+
+    reverseMap(data: IdentifiableBook) {
+        return {
+            id: data.getId(),
+            book: {
+                "Book Title": data.getBookTitle(),
+                "Author": data.getAuthor(),
+                "Genre": data.getGenre(),
+                "Format": data.getFormat(),
+                "Language": data.getLanguage(),
+                "Publisher": data.getPublisher(),
+                "Special Edition": data.getSpecialEdition(),
+                "Packaging": data.getPackaging()
+            }
+        };
+    }
+}

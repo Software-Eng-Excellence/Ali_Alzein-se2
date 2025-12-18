@@ -100,3 +100,66 @@ export class SQLiteCakeMapper implements IMapper<SQLiteCake, IdentifiableCake> {
         };
     }
 }
+interface JsonCake {
+    id?: string;
+    type?: string;
+    flavor?: string;
+    filling?: string;
+    size?: number;
+    layers?: number;
+    frostingType?: string;
+    frostingFlavor?: string;
+    decorationType?: string;
+    decorationColor?: string;
+    customMessage?: string;
+    shape?: string;
+    allergies?: string;
+    specialIngredients?: string;
+    packagingType?: string;
+}
+
+export class JsonCakeRequestMapper implements IMapper<any, IdentifiableCake> {
+    map(data: any): IdentifiableCake {
+        const cake = CakeBuilder.newBuilder()
+            .setType(data.type ?? data.typeName ?? data.kind)
+            .setFlavor(data.flavor)
+            .setFilling(data.filling)
+            .setSize(data.size)
+            .setLayers(data.layers)
+            .setFrostingType(data.frosting_type)
+            .setFrostingFlavor(data.frosting_flavor)
+            .setDecorationType(data.decoration_type)
+            .setDecorationColor(data.decoration_color)
+            .setCustomMessage(data.custom_message)
+            .setShape(data.shape)
+            .setAllergies(data.allergies)
+            .setSpecialIngredients(data.special_ingredients)
+            .setPackagingType(data.packaging_type)
+            .build();
+
+        return IdentifiableCakeBuilder.newBuilder()
+            .setCake(cake)
+            .setId(data.id)
+            .build();
+    }
+
+    reverseMap(data: IdentifiableCake): JsonCake {
+        return {
+            id: data.getId(),
+            type: data.getType(),
+            flavor: data.getFlavor(),
+            filling: data.getFilling(),
+            size: data.getSize(),
+            layers: data.getLayers(),
+            frostingType: data.getFrostingType(),
+            frostingFlavor: data.getFrostingFlavor(),
+            decorationType: data.getDecorationType(),
+            decorationColor: data.getDecorationColor(),
+            customMessage: data.getCustomMessage(),
+            shape: data.getShape(),
+            allergies: data.getAllergies(),
+            specialIngredients: data.getSpecialIngredients(),
+            packagingType: data.getPackagingType()
+        };
+    }
+}

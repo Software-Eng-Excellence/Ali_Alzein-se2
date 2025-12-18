@@ -1,7 +1,7 @@
 import { CSVCakeMapper, SQLiteCakeMapper } from "../../mappers/Cake.mapper";
 import { IMapper } from "../../mappers/IMapper";
 import { Cake } from "../../model/Cake.model";
-import { DBMode } from "../../repository/Repository.factory";
+import { DBMode } from "../../config/types";
 
 export class CakeMapperFactory{
     public static create(mode: DBMode): IMapper<any, Cake>{

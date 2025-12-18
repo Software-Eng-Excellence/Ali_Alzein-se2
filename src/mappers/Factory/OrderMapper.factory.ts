@@ -1,4 +1,4 @@
-import { DBMode } from "../../repository/Repository.factory";
+import { DBMode } from "../../config/types";
 import { itemCategory, IItem } from "../../model/IItem";
 import { IMapper } from "../IMapper";
 import { IOrder } from "../../model/IOrder";

@@ -158,7 +158,8 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
         try {
             client = await pool.connect();
             client.query("BEGIN");
-            await this.itemRepository.delete(id);
+            const itemId = (await this.get(id)).getItem().getId();
+            await this.itemRepository.delete(itemId);
             await client.query(DELETE_ORDER_BY_ID, [id]);
             await client.query("COMMIT");
         } catch (error: unknown) {

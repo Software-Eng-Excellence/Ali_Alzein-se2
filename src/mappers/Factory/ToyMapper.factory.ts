@@ -1,7 +1,7 @@
 import { IMapper } from "../../mappers/IMapper";
 import { SQLiteToyMapper, XMLToyMapper } from "../../mappers/Toy.mapper";
 import { Toy } from "../../model/Toy.model";
-import { DBMode } from "../../repository/Repository.factory";
+import { DBMode } from "../../config/types";
 
 export class ToyMapperFactory{
     public static create( mode: DBMode): IMapper<any, Toy>{

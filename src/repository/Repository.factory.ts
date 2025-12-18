@@ -7,14 +7,7 @@ import { CakeRepository as PCakeRepository} from "./PostgreSQL/Cake.order.reposi
 import { BookRepository as PBookRepository} from "./PostgreSQL/Book.order.repository";
 import { ToyRepository as PToyRepository} from "./PostgreSQL/Toy.order.repository";
 import { CakeRepository } from "./sqlite/Cake.order.repository";
-import { CakeOrderRepository } from "./file/Cake.order.repository";
-import config from "../config/index";
-
-export enum DBMode {
-    SQLITE,
-    POSTGRESQL,
-    FILE
-}
+import { DBMode } from "../config/types";
 
 export class RepositoryFactory {
     public static async create (mode: DBMode, category:itemCategory): Promise<IRepository<IIdentifiableOrderItem>>{

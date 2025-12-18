@@ -1,7 +1,7 @@
 import { JsonBookMapper, SQLiteBookMapper } from "../../mappers/book.mapper";
 import { IMapper } from "../../mappers/IMapper";
 import { Book } from "../../model/Book.model";
-import { DBMode } from "../../repository/Repository.factory";
+import { DBMode } from "../../config/types";
 
 
 export class BookMapperFactory{

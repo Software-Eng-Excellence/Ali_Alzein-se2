@@ -1,10 +1,10 @@
-import { ServiceException } from "../util/exceptions/ServiceException";
-import { IdentifiableOrderItem, Order } from "../model/Order.model";
 import { RepositoryFactory } from "../repository/Repository.factory";
-import config from "config";
+import config from "../config";
 import { itemCategory } from "../model/IItem";
 import { IIdentifiableOrderItem} from "../model/IOrder"
 import { IRepository } from "../repository/IRepository";
+import { NotFoundException } from "../util/exceptions/http/NotFoundException";
+import { BadRequestException } from "../util/exceptions/http/BadRequestException";
 
 export class OrderManagementService {
     private async getRepo(category: itemCategory):Promise<IRepository<IIdentifiableOrderItem>>{
@@ -12,33 +12,41 @@ export class OrderManagementService {
     }
     private validateOrder(order: IIdentifiableOrderItem):void{
         if (order.getPrice() < 0 || order.getQuantity() <= 0 || !order.getItem()) {
-            throw new ServiceException("Invalid order details");
+            const details = {
+                ItemNotDefined: !order.getItem(),
+                NegativePrice: order.getPrice() < 0,
+                NegativeQuantity: order.getQuantity() <= 0
+            }
+            throw new BadRequestException("Invalid order details", details);
         }
     }
 
     public async createOrder(order: IIdentifiableOrderItem):Promise<IIdentifiableOrderItem> {
         this.validateOrder(order);
         const repo = await this.getRepo(order.getItem().getCategory());
-        repo.create(order)
+        await repo.create(order)
         return order;
     }
 
     public async getOrder(id: string):Promise<IIdentifiableOrderItem> {
         const categories = Object.values(itemCategory);
         for (const category of categories) {
+            try{
             const repo = await this.getRepo(category);
             const order = await repo.get(id);
-            if (order) {
-                return order;
+            return order;
+            }
+            catch (error) {
+                //ignore
             }
         }
-        throw new ServiceException(`Order with id ${id} not found`);
+        throw new NotFoundException(`Order with id ${id} not found`);
     }
 
-    public async updateOrder(order: IIdentifiableOrderItem): Promise<void>{
+    public async updateOrder(order: IIdentifiableOrderItem): Promise<void> {
         this.validateOrder(order);
         const repo = await this.getRepo(order.getItem().getCategory());
-        repo.update(order);
+        await repo.update(order);
     }
 
     public async deleteOrder(id: string): Promise<void>{
@@ -51,7 +59,7 @@ export class OrderManagementService {
                 return;
             }
         }
-        throw new ServiceException(`Order with id ${id} not found`);
+        throw new NotFoundException(`Order with id ${id} not found`);
     }
 
     public async getAllOrders(): Promise<IIdentifiableOrderItem[]> {

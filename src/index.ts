@@ -1,12 +1,12 @@
 import config from './config';
-import express, { NextFunction, Request, request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import logger from './util/logger';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import requestLogger from './middleware/requestLogger';
 import routes from './routes';
-import { ApiException } from './util/exceptions/ApiException';
+import { HttpException } from './util/exceptions/http/httpException';
 
 const app = express();
 
@@ -33,10 +33,13 @@ app.use((req, res )=>{
 
 // config Error Handler
 app.use((err:Error, req: Request, res: Response, next: NextFunction) => {
-  if(err instanceof ApiException){
-    const apiErr = err as ApiException;
-    logger.error("API Exception of status %d: %s",apiErr.status, err.message);
-    res.status(apiErr.status).json({message: apiErr.message});
+  if(err instanceof HttpException){
+    const HttpException = err as HttpException;
+    logger.error(" %s [%d] \"%s\" %o ",HttpException.name, HttpException.status, HttpException.message, HttpException.details || {});
+    res.status(HttpException.status).json({
+      message: HttpException.message,
+      details: HttpException.details || {}
+    });
   }
   else{
     logger.error("Unhandled Exception: %s", err.message);
