@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import requestLogger from './middleware/requestLogger';
 import routes from './routes';
-import { HttpException } from './util/exceptions/http/httpException';
+import { HttpException } from './util/exceptions/http/HException';
 
 const app = express();
 
