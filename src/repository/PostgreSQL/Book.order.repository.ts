@@ -2,7 +2,7 @@ import { itemCategory } from "../../model/IItem";
 import { IdentifiableBook } from "../../model/Book.model";
 import { id, Initializable, IRepository } from "../IRepository";
 import logger from "../../util/logger";
-import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/repositoryExceptions";
+import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/RepositoryExceptions";
 import { SQLiteBook, SQLiteBookMapper } from "../../mappers/book.mapper";
 import pool from "./ConnectionManager";
 
