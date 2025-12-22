@@ -3,7 +3,7 @@ import { IdentifiableToy } from "../../model/Toy.model";
 import { id, Initializable, IRepository } from "../../repository/IRepository";
 import pool from "./ConnectionManager";
 import logger from "../../util/logger";
-import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/repositoryExceptions";
+import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/RepositoryExceptions";
 import { SQLiteToy, SQLiteToyMapper } from "../../mappers/Toy.mapper";
 
 

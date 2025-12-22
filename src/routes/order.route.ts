@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { OrderController } from "../controllers/order.controller";
-import { OrderManagementService } from "../services/orderManagement.service";
+import { OrderManagementService } from "../services/OrderManagement.service";
 import { asyncHandler } from "../middleware/asyncHandler";
 
 const orderController = new OrderController(new OrderManagementService());

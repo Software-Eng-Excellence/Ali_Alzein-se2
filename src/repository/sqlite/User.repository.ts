@@ -57,6 +57,18 @@ export class UserRepository implements InitializableRepository<User> {
         const res = await db.run('DELETE FROM users WHERE id = ?', id);
         if ((res as any).changes === 0) throw new Error('ItemNotFound');
     }
+
+    async getByEmail(email: string): Promise<User> {
+        const db = await ConnectionManager.getConnection();
+        const user = await db.get('SELECT * FROM users WHERE email = ?', email);
+        if (!user) throw new Error('ItemNotFound');
+        return new User(
+            user.name,
+            user.email,
+            user.password,
+            user.id
+        );
+    }
 }
 
 export async function createUserRepository(): Promise<UserRepository> {

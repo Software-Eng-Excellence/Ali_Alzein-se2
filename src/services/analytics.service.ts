@@ -1,6 +1,6 @@
 import { itemCategory } from "../model/IItem";
 import { IIdentifiableOrderItem } from "../model/IOrder";
-import { OrderManagementService } from "./orderManagement.service";
+import { OrderManagementService } from "./OrderManagement.service";
 
 
 export class AnalyticsService {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AnalyticsService } from "../services/analytics.service";
+import { AnalyticsService } from "../services/Analytics.service";
 import { BadRequestException } from "../util/exceptions/http/BadRequestException";
 import { itemCategory } from "../model/IItem";
 

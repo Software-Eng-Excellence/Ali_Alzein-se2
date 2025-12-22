@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { UserService } from '../services/userManagement.service';
+import { UserService } from '../services/UserManagement.service';
 import { BadRequestException } from '../util/exceptions/http/BadRequestException';
 import { NotFoundException } from '../util/exceptions/http/NotFoundException';
-import { ServiceException } from 'util/exceptions/ServiceException';
+import { ServiceException } from '../util/exceptions/ServiceException';
 
 export class UserController {
     constructor(private userService: UserService) {}

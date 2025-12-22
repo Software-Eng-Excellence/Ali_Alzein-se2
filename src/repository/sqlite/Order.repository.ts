@@ -1,7 +1,7 @@
 import { IIdentifiableOrderItem } from "../../model/IOrder";
 import { id, Initializable, IRepository } from "../../repository/IRepository";
 import logger from "../../util/logger";
-import { DbException, InitializationException } from "../../util/exceptions/repositoryExceptions";
+import { DbException, InitializationException } from "../../util/exceptions/RepositoryExceptions";
 import { IIdentifiableItem } from "../../model/IItem";
 import { ConnectionManager } from "../sqlite/ConnectionManager";
 import {SQLiteOrder, SQLiteOrderMapper}  from "../../mappers/Order.mapper";

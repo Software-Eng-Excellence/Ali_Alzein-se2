@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { OrderManagementService } from "../services/orderManagement.service";
+import { OrderManagementService } from "../services/OrderManagement.service";
 import { IdentifiableOrderItem } from "../model/Order.model";
 import { JsonRequestFactory } from "../mappers";
 import { BadRequestException } from "../util/exceptions/http/BadRequestException";

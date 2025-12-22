@@ -1,7 +1,7 @@
 import { AnalyticsController } from "../controllers/analytics.controller";
 import { Router } from "express";
-import { AnalyticsService } from "../services/analytics.service";
-import { OrderManagementService } from "../services/orderManagement.service";
+import { AnalyticsService } from "../services/Analytics.service";
+import { OrderManagementService } from "../services/OrderManagement.service";
 import { asyncHandler } from "../middleware/asyncHandler";
 
 const route = Router();
