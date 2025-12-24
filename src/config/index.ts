@@ -8,6 +8,7 @@ dotenv.config({path: path.join(__dirname, '../../.env')})
 export default{
     logDir: process.env.LOG_DIR || "./logs",
     isDev: process.env.NODE_ENV === "development",
+    isProduction: process.env.NODE_ENV === "production",
     storagePath: {
         csv:{
             cake: "src/data/cake orders.csv"
@@ -27,7 +28,8 @@ export default{
 
     auth:{
     jwtSecret: process.env.JWT_SECRET || "secretkey",
-    tokenExpiration: (process.env.TOKEN_EXPIRATION || "1h") as StringValue,
+    tokenExpiration: (process.env.TOKEN_EXPIRATION || "20m") as StringValue,
+    refreshTokenExpiration: (process.env.REFRESH_TOKEN_EXPIRATION || "7d") as StringValue
     }
     
 }

@@ -2,6 +2,7 @@ import { BadRequestException } from "../util/exceptions/http/BadRequestException
 import { AuthenticationService } from "../services/Authentication.service";
 import { Request, Response } from "express";
 import { UserService } from "../services/UserManagement.service";
+import { AuthRequest } from "config/types";
 
 
 export class AuthenticationController{
@@ -19,8 +20,9 @@ export class AuthenticationController{
         }
         try {
         const userId =  await this.userService.validateUser(email, password);
+        this.authService.persistAuthentication(res, userId);
         res.status(200).json({
-            token: this.authService.generateToken(userId)
+            message: "Login successful",
         });    
         } catch (error) {
             if((error as Error).message === 'User not found'){
@@ -31,9 +33,11 @@ export class AuthenticationController{
          
     }
 
-    logout(){
- 
+    logout(req: Request, res: Response) {
+        const authReq = req as AuthRequest;
+        this.authService.clearTokens(res);
+        res.status(200).json({
+            message: "Logout successful"
+        });
     }
-
-
 }
