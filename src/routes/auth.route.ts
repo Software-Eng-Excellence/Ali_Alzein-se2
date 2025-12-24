@@ -3,6 +3,7 @@ import { asyncHandler } from '../middleware/asyncHandler';
 import { AuthenticationController } from '../controllers/auth.controller';
 import { AuthenticationService } from '../services/Authentication.service';
 import { UserService } from '../services/UserManagement.service';
+import { Authenticate } from 'middleware/auth';
 
     const router = express.Router();
 
@@ -14,7 +15,7 @@ import { UserService } from '../services/UserManagement.service';
     router.route('/login')
         .post(asyncHandler(authController.login.bind(authController)));
 
-    // router.route('/logout')
-    //     .get();
+    router.route('/logout')
+        .get(Authenticate, authController.logout.bind(authController));
 
 export default router;
