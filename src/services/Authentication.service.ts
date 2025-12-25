@@ -1,5 +1,5 @@
 import config from '../config';
-import { TokenPayload } from '../config/types';
+import { TokenPayload, UserPayload } from '../config/types';
 import jwt from 'jsonwebtoken';
 import { AuthenticationException, InvalidTokenException, TokenExpiredException } from '../util/exceptions/http/AuthenticationException';
 import logger from '../util/logger';
@@ -14,25 +14,25 @@ export class AuthenticationService {
         private refreshTokenExpiration = config.auth.refreshTokenExpiration
     ){}
 
-    generateToken(userId: string): string {
+    generateToken(payload: UserPayload): string {
         return jwt.sign(
-            {userId},
+            payload,
             this.jwtSecret,
             { expiresIn: this.expirationTime }
         );
     }
 
-    generateRefreshToken(userId: string): string {
+    generateRefreshToken(payload: UserPayload): string {
         return jwt.sign(
-            {userId},
+            payload,
             this.jwtSecret,
             { expiresIn: this.refreshTokenExpiration }
         );
     }
 
-    verify(token: string): TokenPayload {
+    verify(token: string): UserPayload {
         try {
-            return jwt.verify(token, this.jwtSecret) as TokenPayload;
+            return jwt.verify(token, this.jwtSecret) as UserPayload;
         } catch (error) {
             logger.error("Token verification failed", error);
             if(error instanceof jwt.TokenExpiredError) {
@@ -50,7 +50,7 @@ export class AuthenticationService {
         if (!payload.userId) {
             throw new InvalidTokenException();
         }
-        return this.generateToken(payload.userId);
+        return this.generateToken(payload);
     }
 
     setTokenIntoCookie(res: Response, token: string) {
@@ -74,9 +74,9 @@ export class AuthenticationService {
         res.clearCookie('refreshToken');
     }
 
-    persistAuthentication(res: Response, userId: string) {
-        const refreshToken = this.generateRefreshToken(userId);
-        const token = this.generateToken(userId);
+    persistAuthentication(res: Response, payload: UserPayload) {
+        const refreshToken = this.generateRefreshToken(payload);
+        const token = this.generateToken(payload);
         this.setTokenIntoCookie(res, token);
         this.setRefreshTokenIntoCookie(res, refreshToken);
     }

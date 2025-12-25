@@ -3,7 +3,7 @@ import { asyncHandler } from '../middleware/asyncHandler';
 import { AuthenticationController } from '../controllers/auth.controller';
 import { AuthenticationService } from '../services/Authentication.service';
 import { UserService } from '../services/UserManagement.service';
-import { Authenticate } from 'middleware/auth';
+import { Authenticate } from '../middleware/auth';
 
     const router = express.Router();
 
