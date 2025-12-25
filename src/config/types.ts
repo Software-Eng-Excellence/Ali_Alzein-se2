@@ -1,5 +1,6 @@
 import {JwtPayload} from 'jsonwebtoken';
 import {Request} from 'express';
+import { ROLE } from './roles';
 
 export enum DBMode {
     SQLITE,
@@ -7,10 +8,15 @@ export enum DBMode {
     FILE
 }
 
-export interface TokenPayload extends JwtPayload {
+export interface UserPayload{
     userId: string;
+    role: ROLE;
+}
+
+export interface TokenPayload extends JwtPayload {
+    user: UserPayload;
 }
 
 export interface AuthRequest extends Request {
-    userId: string;
+    user: UserPayload;
 }
