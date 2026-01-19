@@ -1,7 +1,7 @@
 import { IIdentifiableOrderItem } from "../../model/IOrder";
 import { id, Initializable, IRepository } from "../../repository/IRepository";
 import logger from "../../util/logger";
-import { DbException, InitializationException } from "../../util/exceptions/repositoryExceptions";
+import { DbException, InitializationException } from "../../util/exceptions/RepositoryExceptions";
 import { IIdentifiableItem } from "../../model/IItem";
 import { ConnectionManager } from "../sqlite/ConnectionManager";
 import {SQLiteOrder, SQLiteOrderMapper}  from "../../mappers/Order.mapper";
@@ -131,7 +131,8 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
         try {
             conn = await ConnectionManager.getConnection();
             conn.exec("BEGIN TRANSACTION");
-            await this.itemRepository.delete(id);
+            const itemId = (await this.get(id)).getItem().getId();
+            await this.itemRepository.delete(itemId);
             await conn.run(DELETE_ORDER_BY_ID, id);
             await conn.exec("COMMIT");
         } catch (error: unknown) {

@@ -1,6 +1,6 @@
 import { IRepository,Initializable, id } from "../../repository/IRepository";
 import { IdentifiableCake } from "../../model/Cake.model";
-import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/repositoryExceptions";
+import { DbException, InitializationException, ItemNotFoundException } from "../../util/exceptions/RepositoryExceptions";
 import logger from "../../util/logger";
 import { ConnectionManager } from "../sqlite/ConnectionManager";
 import { itemCategory } from "../../model/IItem";

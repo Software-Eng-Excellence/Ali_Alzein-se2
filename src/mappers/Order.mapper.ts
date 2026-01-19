@@ -98,3 +98,36 @@ export class JsonOrderMapper implements IMapper<any, IOrder>{
         .build();
     }   
 }
+
+interface JsonItem {
+    id: string
+}
+interface JsonOrder{
+    id: string;
+    category: string;
+    item: JsonItem;
+    quantity: number;
+    price: number;
+}
+export class JsonRequestOrderMapper implements IMapper<any, IdentifiableOrderItem>{
+    constructor(private itemMapper: IMapper<any, IIdentifiableItem>){}
+
+    map(data: any): IdentifiableOrderItem {
+        const item = this.itemMapper.map(data.item);
+
+        const order = OrderBuilder.newBuilder()
+        .setId(data.id)
+        .setPrice(data.price)
+        .setQuantity(data.quantity)
+        .setItem(item)
+        .build();
+
+        return IdentifiableOrderItemBuilder.newBuilder().setOrder(order).setItem(item).build();
+    }
+    reverseMap(data: IIdentifiableOrderItem) {
+        return{
+            category: data.getItem().getCategory(),
+            ...data
+        }
+    }
+}

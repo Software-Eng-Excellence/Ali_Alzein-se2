@@ -1,12 +1,17 @@
 import { itemCategory } from "../model/IItem";
 import { Initializable, IRepository } from "./IRepository";
+<<<<<<< HEAD
 import { IOrder } from "../model/IOrder";
+=======
+import { IIdentifiableOrderItem, IOrder } from "../model/IOrder";
+>>>>>>> module-4.1
 import { OrderRepository } from "./sqlite/Order.repository";
 import { OrderRepository as POrderRepository} from "./PostgreSQL/Order.repository";
 import { CakeRepository as PCakeRepository} from "./PostgreSQL/Cake.order.repository";
 import { BookRepository as PBookRepository} from "./PostgreSQL/Book.order.repository";
 import { ToyRepository as PToyRepository} from "./PostgreSQL/Toy.order.repository";
 import { CakeRepository } from "./sqlite/Cake.order.repository";
+<<<<<<< HEAD
 import { CakeOrderRepository } from "./file/Cake.order.repository";
 import config from "../config/index";
 
@@ -21,6 +26,15 @@ export class RepositoryFactory {
         switch(mode){
             case DBMode.SQLITE:
                 let repository: IRepository<IOrder> & Initializable;
+=======
+import { DBMode } from "../config/types";
+
+export class RepositoryFactory {
+    public static async create (mode: DBMode, category:itemCategory): Promise<IRepository<IIdentifiableOrderItem>>{
+        switch(mode){
+            case DBMode.SQLITE:
+                let repository: IRepository<IIdentifiableOrderItem> & Initializable;
+>>>>>>> module-4.1
                 switch (category) {
                     case itemCategory.CAKE:
                         repository = new OrderRepository(new CakeRepository());
@@ -30,6 +44,7 @@ export class RepositoryFactory {
                 }
                 await repository.init();
                 return repository;
+<<<<<<< HEAD
             case DBMode.FILE:
                 switch (category){
                     case itemCategory.CAKE:
@@ -39,6 +54,13 @@ export class RepositoryFactory {
                 }
             case DBMode.POSTGRESQL:
                 let prepository: IRepository<IOrder> & Initializable;
+=======
+
+            case DBMode.FILE:
+                throw new Error("File DB Mode not supported yet");
+            case DBMode.POSTGRESQL:
+                let prepository: IRepository<IIdentifiableOrderItem> & Initializable;
+>>>>>>> module-4.1
                 switch (category){
                     case itemCategory.CAKE:
                         prepository = new POrderRepository( new PCakeRepository());

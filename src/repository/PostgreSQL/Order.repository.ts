@@ -1,7 +1,11 @@
 import { IIdentifiableOrderItem } from "../../model/IOrder";
 import { id, Initializable, IRepository } from "../../repository/IRepository";
 import logger from "../../util/logger";
+<<<<<<< HEAD
 import { DbException, InitializationException } from "../../util/exceptions/repositoryExceptions";
+=======
+import { DbException, InitializationException } from "../../util/exceptions/RepositoryExceptions";
+>>>>>>> module-4.1
 import { IIdentifiableItem } from "../../model/IItem";
 import {SQLiteOrder, SQLiteOrderMapper}  from "../../mappers/Order.mapper";
 import pool from "../PostgreSQL/ConnectionManager";
@@ -158,7 +162,12 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
         try {
             client = await pool.connect();
             client.query("BEGIN");
+<<<<<<< HEAD
             await this.itemRepository.delete(id);
+=======
+            const itemId = (await this.get(id)).getItem().getId();
+            await this.itemRepository.delete(itemId);
+>>>>>>> module-4.1
             await client.query(DELETE_ORDER_BY_ID, [id]);
             await client.query("COMMIT");
         } catch (error: unknown) {

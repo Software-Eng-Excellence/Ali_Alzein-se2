@@ -19,7 +19,14 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+<<<<<<< HEAD
+=======
+    "@types/jsonwebtoken": "^9.0.10",
+>>>>>>> module-4.1
     "@types/pg": "^8.15.6",
     "@types/xml2js": "^0.4.14",
     "eslint": "^9.35.0",
@@ -33,12 +40,21 @@
     "typescript-eslint": "^8.42.0"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0",
     "dotenv": "^17.2.3",
+<<<<<<< HEAD
+=======
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+>>>>>>> module-4.1
     "pg": "^8.16.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0",
     "winston": "^3.17.0",
     "xml2js": "^0.6.2"
   }
